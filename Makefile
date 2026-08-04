@@ -1,7 +1,7 @@
 PYTHON	= .venv/bin/python3
 PIP		= .venv/bin/pip
 SRC		= a_maze_ing.py
-test	= config.txt
+CONFIG	= config.txt
 VENV	= .venv
 
 $(VENV):
@@ -14,7 +14,7 @@ all: run
 
 run: $(VENV)
 	@echo "YOU ARE A-MAZE-ING!"
-	$(PYTHON) $(SRC)
+	$(PYTHON) $(SRC) $(CONFIG)
 
 test: 
 	@echo "Running test..."
@@ -32,7 +32,6 @@ lint-strict:
 	mypy --strict *.py
 
 clean:
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
+	rm -rf .mypy_cache .pytest_cache
 
 .PHONY: all run test debug lint lint-strict clean
