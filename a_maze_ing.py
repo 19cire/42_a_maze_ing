@@ -1,27 +1,12 @@
 #!/usr/bin/python3
 from typing import Any
-import time
+# import time
 import sys
+from maze_functoins.file_reader import read_file
 
 
 class SizeError(Exception):
     pass
-
-
-def read_file(file: str) -> dict[str, str]:
-    data = {}
-    try:
-        with open(file, "r") as f:
-            for line in f:
-                line = line.strip()
-                value = line.split("=")
-                if value[0] == "ENTRY" or value[0] == "EXIT":
-                    data[value[0]] = value[1].split(",")
-                else:
-                    data[value[0]] = value[1]
-    except FileNotFoundError as e:
-        print(f"{e.__class__.__name__}: {e}")
-    return data
 
 
 class MazeBox():
@@ -51,7 +36,8 @@ def bg_square(r: int, g: int, b: int) -> str:
     return f"\033[48;2;{r};{g};{b}m  \033[0m"
 
 
-def change_color() -
+def change_color() -> None:
+    print("change color")
 
 
 def show_maze(maze_board: dict[tuple[int, int], MazeBox],
@@ -60,7 +46,7 @@ def show_maze(maze_board: dict[tuple[int, int], MazeBox],
     height: int = maze_board[last_key].y
     width: int = maze_board[last_key].x
     for line in range(height + 1):
-        symbol: str = bg_square(0, 100, 255)
+        symbol: str = bg_square(12, 255, 255)
         line1: list[str] = [symbol]
         line2: list[str] = [symbol]
         line3: list[str] = [symbol]
@@ -114,17 +100,46 @@ def fourtytwo(maze: dict[tuple[int, int], MazeBox]) -> dict[tuple[int, int],
     return four
 
 
-def main(config_data: dict[str, str]) -> None:
+def new_maze() -> None:
+    ...
 
-    maze_board = create_maze_base(config_data)
-    show_maze(maze_board, fourtytwo(maze_board))
+
+def say_hello() -> None:
+    ...
+
+
+def store_maze() -> None:
+    ...
+
+
+def show_menu() -> None:
     print("====MAZE GENERATOR====")
     print("1) Change color")
-    print("2) new mazr")
+    print("2) new maze")
     print("3) say hello")
     print("4) store maze")
-    number = input("What you wanna do?")
-    print(number)
+    print("5) quit")
+    number = int(input("What you wanna do?"))
+    if number == 1:
+        change_color()
+    elif number == 2:
+        new_maze()
+    elif number == 3:
+        say_hello()
+    elif number == 4:
+        store_maze()
+    elif number == 5:
+        print("bye!")
+        exit(0)
+    else:
+        print("Wrong input number!")
+    show_menu()
+
+
+def main(config_data: dict[str, str]) -> None:
+    maze_board = create_maze_base(config_data)
+    show_maze(maze_board, fourtytwo(maze_board))
+    show_menu()
 
 
 if __name__ == "__main__":

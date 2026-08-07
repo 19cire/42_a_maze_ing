@@ -83,3 +83,8 @@ def get_unvisited_neighbours(grid: list[list[int]], x: int, y: int,
             continue
         unvisited.append(direction)
     return unvisited
+
+
+if __name__ == "__main__":
+    grid = build_the_grid(10, 10)
+    print(grid)
