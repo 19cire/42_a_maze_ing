@@ -44,6 +44,7 @@ def open_wall(grid: list[list[int]], x: int, y: int, direction: int) -> None:
         direction: indicate which wall we are opening
 
     Returns:
+        None
     """
     opposite_direction = DIRECTION_OPPOSITE[direction]
     dx, dy = DIRECTION_STEP[direction]
@@ -54,3 +55,31 @@ def open_wall(grid: list[list[int]], x: int, y: int, direction: int) -> None:
         raise ValueError("You are outside of the labyrinth")
     grid[y][x] &= ~direction
     grid[neighbour_y][neighbour_x] &= ~opposite_direction
+
+
+def get_unvisited_neighbours(grid: list[list[int]], x: int, y: int,
+                             visited: set[tuple[int, int]]) -> list[int]:
+    """This function give us all possible unvisited neighbours,
+        where DFS can carve a wall
+
+    Args:
+        grid: the grid we are working with
+        x: cell coordinate i.e the column
+        y: cell coordinate i.e the row
+        visited: a set with the coordinates of visited cells
+
+    Returns:
+        a list of int indicating the direction to adjacent unvisted cells
+    """
+    unvisited: list[int] = []
+    for direction in DIRECTION_STEP:
+        dx, dy = DIRECTION_STEP[direction]
+        neighbour_x = x + dx
+        neighbour_y = y + dy
+        if not (neighbour_x >= 0 and neighbour_x < len(grid[0])
+                and neighbour_y >= 0 and neighbour_y < len(grid)):
+            continue
+        if (neighbour_x, neighbour_y) in visited:
+            continue
+        unvisited.append(direction)
+    return unvisited
