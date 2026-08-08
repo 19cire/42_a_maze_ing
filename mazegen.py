@@ -1,3 +1,4 @@
+import random
 ALL_WALLS_CLOSED = 15
 NORTH = 1
 EAST = 2
@@ -83,3 +84,18 @@ def get_unvisited_neighbours(grid: list[list[int]], x: int, y: int,
             continue
         unvisited.append(direction)
     return unvisited
+
+
+def carve_maze(grid: list[list[int]], x: int, y: int,
+               rng: random.Random) -> None:
+    """This is the main function carving walls in the DFS algorithm
+
+    Args:
+        grid: the grid we are working with
+        x: coordinate of starting cell i.e column
+        y: coordinate of starting cell i.e row
+        rng: random generator object
+
+    Returns:
+        None
+    """
