@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 from typing import Any
-import time
 import sys
 
 
@@ -49,9 +48,6 @@ def create_maze_base(data: dict[str, Any]) -> dict[tuple[int, int], MazeBox]:
 
 def bg_square(r: int, g: int, b: int) -> str:
     return f"\033[48;2;{r};{g};{b}m  \033[0m"
-
-
-def change_color() -
 
 
 def show_maze(maze_board: dict[tuple[int, int], MazeBox],

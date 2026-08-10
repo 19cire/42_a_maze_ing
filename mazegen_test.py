@@ -1,4 +1,5 @@
-from mazegen import build_the_grid, open_wall, get_unvisited_neighbours, NORTH, EAST, SOUTH, WEST
+from mazegen import (build_the_grid, open_wall, get_unvisited_neighbours,
+                     NORTH, EAST, SOUTH, WEST)
 
 grid = build_the_grid(20, 15)
 print("===================================================")
