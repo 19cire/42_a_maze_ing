@@ -99,3 +99,19 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
     Returns:
         None
     """
+    visited: set[tuple[int, int]] = {(x, y)}
+    stack: list[tuple[int, int]] = [(x, y)]
+    while stack:
+        current_x, current_y = stack[-1]
+        directions = get_unvisited_neighbours(grid, current_x,
+                                              current_y, visited)
+        if not directions:
+            stack.pop()
+        else:
+            direction = rng.choice(directions)
+            open_wall(grid, current_x, current_y, direction)
+            dx, dy = DIRECTION_STEP[direction]
+            neighbour_x = current_x + dx
+            neighbour_y = current_y + dy
+            visited.add((neighbour_x, neighbour_y))
+            stack.append((neighbour_x, neighbour_y))
