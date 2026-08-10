@@ -1,4 +1,5 @@
-from mazegen import build_the_grid, open_wall, get_unvisited_neighbours, NORTH, EAST, SOUTH, WEST
+import random
+from mazegen import build_the_grid, is_wall_closed, open_wall, get_unvisited_neighbours, carve_maze, DIRECTION_STEP, DIRECTION_OPPOSITE, ALL_WALLS_CLOSED, NORTH, EAST, SOUTH, WEST
 
 grid = build_the_grid(20, 15)
 print("===================================================")
@@ -42,3 +43,41 @@ visited = {(4, 3), (5, 4), (4, 5), (3, 4)}
 unvisited = get_unvisited_neighbours(grid, 4, 4, visited)
 print("interior (4,4), ALL visited:", unvisited)
 print("expected: [] =", [])
+print("===================================================")
+rng = random.Random(42)
+carve_maze(grid, 0, 0, rng)
+untouched = 0
+for row in grid:
+    for cell in row:
+        if cell == ALL_WALLS_CLOSED:
+            untouched += 1
+print("cells never reached:", untouched, "- expected 0")
+print("===================================================")
+grid = build_the_grid(20, 15)
+rng = random.Random(42)
+carve_maze(grid, 0, 0, rng)
+for row in grid:
+    line = ""
+    for cell in row:
+        line += f"{cell:x}"
+    print(line)
+print("===================================================")
+open_count = 0
+for row in grid:
+    for cell in row:
+        for direction in DIRECTION_STEP:
+            if not is_wall_closed(cell, direction):
+                open_count += 1
+print("open walls:", open_count // 2, "- expected 299")
+print("===================================================")
+grid_a = build_the_grid(20, 15)
+rng_a = random.Random(42)
+carve_maze(grid_a, 0, 0, rng_a)
+grid_b = build_the_grid(20, 15)
+rng_b = random.Random(42)
+carve_maze(grid_b, 0, 0, rng_b)
+grid_c = build_the_grid(20, 15)
+rng_c = random.Random(7)
+carve_maze(grid_c, 0, 0, rng_c)
+print(grid_a == grid_b)
+print(grid_a == grid_c)
