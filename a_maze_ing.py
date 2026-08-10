@@ -5,9 +5,7 @@ import random
 from maze_functoins.file_reader import read_file
 from maze_functoins.color import change_color, bg_square
 from maze_functoins.mazegen import build_the_grid, carve_maze
-# open_wall,
-# get_unvisited_neighbours,
-# NORTH, EAST, SOUTH, WEST
+from maze_functoins.show_maze import maze_viewer
 
 
 class SizeError(Exception):
@@ -57,34 +55,8 @@ def show_menu() -> None:
 def main(config_data: dict[str, str]) -> None:
     grid = build_the_grid(
         int(config_data["WIDTH"]), int(config_data["HEIGHT"]))
-    carve_maze(grid, 2, 3, random.Random())
-    print(grid)
-    print("=========================")
-    color1 = change_color()
-    symbol: str = bg_square(color1[0], color1[1], color1[2])
-
-    TOP = 1
-    BOTTOM = 4
-    LEFT = 8    # oder wie auch immer dein Schema aussieht
-
-    for x in grid:
-        line1: list[str] = [symbol]
-        line2: list[str] = [symbol]
-        line3: list[str] = [symbol]
-
-        for y in x:
-            line1.append(symbol if y & TOP else "  ")
-            line1.append(symbol)
-
-            line2.append("  " if y & LEFT else symbol)
-
-            line3.append(symbol if y & BOTTOM else "  ")
-            line3.append(symbol)
-
-        line2.append(symbol)
-        print("".join(line1))
-        print("".join(line2))
-    print("".join(line3))
+    carve_maze(grid, 3, 3, random.Random(42))
+    maze_viewer(grid)
 
 
 if __name__ == "__main__":
