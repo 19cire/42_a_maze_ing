@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 from typing import Any
-# import time
 import sys
 from maze_functoins.file_reader import read_file
 from maze_functoins.color import change_color, bg_square
@@ -31,6 +30,10 @@ def create_maze_base(data: dict[str, Any]) -> dict[tuple[int, int], MazeBox]:
         for row in range(width):
             boxes[(row, line)] = MazeBox(x=row, y=line)
     return boxes
+
+
+def bg_square(r: int, g: int, b: int) -> str:
+    return f"\033[48;2;{r};{g};{b}m  \033[0m"
 
 
 def show_maze(maze_board: dict[tuple[int, int], MazeBox],
