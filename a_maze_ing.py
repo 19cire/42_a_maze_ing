@@ -3,6 +3,7 @@ from typing import Any
 # import time
 import sys
 from maze_functoins.file_reader import read_file
+from maze_functoins.color import change_color, bg_square
 
 
 class SizeError(Exception):
@@ -32,21 +33,15 @@ def create_maze_base(data: dict[str, Any]) -> dict[tuple[int, int], MazeBox]:
     return boxes
 
 
-def bg_square(r: int, g: int, b: int) -> str:
-    return f"\033[48;2;{r};{g};{b}m  \033[0m"
-
-
-def change_color() -> None:
-    print("change color")
-
-
 def show_maze(maze_board: dict[tuple[int, int], MazeBox],
               fourty: dict[tuple[int, int], MazeBox]) -> None:
     last_key = next(reversed(maze_board))
     height: int = maze_board[last_key].y
     width: int = maze_board[last_key].x
+    color1 = change_color()
+    color2 = change_color()
     for line in range(height + 1):
-        symbol: str = bg_square(12, 255, 255)
+        symbol: str = bg_square(color1[0], color1[1], color1[2])
         line1: list[str] = [symbol]
         line2: list[str] = [symbol]
         line3: list[str] = [symbol]
@@ -55,7 +50,8 @@ def show_maze(maze_board: dict[tuple[int, int], MazeBox],
             line1.append(symbol) if maze_board.get(
                 (row, line)) else line1.append("  ")
             line1.append(symbol)
-            line2.append(bg_square(160, 100, 255)) if (
+
+            line2.append(bg_square(color2[0], color2[1], color2[2])) if (
                 row, line) in fourty else line2.append("  ")
             line2.append(symbol) if maze_board.get(
                 (row, line)) else line2.append("  ")
@@ -121,7 +117,7 @@ def show_menu() -> None:
     print("5) quit")
     number = int(input("What you wanna do?"))
     if number == 1:
-        change_color()
+        show_maze()
     elif number == 2:
         new_maze()
     elif number == 3:
@@ -139,6 +135,7 @@ def show_menu() -> None:
 def main(config_data: dict[str, str]) -> None:
     maze_board = create_maze_base(config_data)
     show_maze(maze_board, fourtytwo(maze_board))
+
     show_menu()
 
 
