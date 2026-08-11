@@ -1,11 +1,9 @@
+from .show_maze import maze_viewer, clear_screen
+import time
 import random
-ALL_WALLS_CLOSED = 15
-NORTH = 1
-EAST = 2
-SOUTH = 4
-WEST = 8
-DIRECTION_STEP = {NORTH: (0, -1), EAST: (1, 0), SOUTH: (0, 1), WEST: (-1, 0)}
-DIRECTION_OPPOSITE = {NORTH: SOUTH, EAST: WEST, SOUTH: NORTH, WEST: EAST}
+from .variables import (ALL_WALLS_CLOSED,
+                        DIRECTION_STEP,
+                        DIRECTION_OPPOSITE)
 
 
 def build_the_grid(width: int, height: int) -> list[list[int]]:
@@ -87,7 +85,7 @@ def get_unvisited_neighbours(grid: list[list[int]], x: int, y: int,
 
 
 def carve_maze(grid: list[list[int]], x: int, y: int,
-               rng: random.Random) -> None:
+               rng: random.Random, entry, exit) -> None:
     """This is the main function carving walls in the DFS algorithm
 
     Args:
@@ -102,6 +100,7 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
     visited: set[tuple[int, int]] = {(x, y)}
     stack: list[tuple[int, int]] = [(x, y)]
     while stack:
+        clear_screen()
         current_x, current_y = stack[-1]
         directions = get_unvisited_neighbours(grid, current_x,
                                               current_y, visited)
@@ -115,3 +114,5 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
             neighbour_y = current_y + dy
             visited.add((neighbour_x, neighbour_y))
             stack.append((neighbour_x, neighbour_y))
+        maze_viewer(grid, [255, 120, 0], entry, exit)
+        time.sleep(0.03)
