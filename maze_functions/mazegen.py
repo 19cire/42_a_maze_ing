@@ -100,6 +100,7 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
     visited: set[tuple[int, int]] = {(x, y)}
     stack: list[tuple[int, int]] = [(x, y)]
     while stack:
+        clear_screen()
         current_x, current_y = stack[-1]
         directions = get_unvisited_neighbours(grid, current_x,
                                               current_y, visited)
@@ -113,6 +114,5 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
             neighbour_y = current_y + dy
             visited.add((neighbour_x, neighbour_y))
             stack.append((neighbour_x, neighbour_y))
-        clear_screen()
         maze_viewer(grid, [255, 120, 0], entry, exit)
         time.sleep(0.03)

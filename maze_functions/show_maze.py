@@ -1,9 +1,14 @@
-from maze_functoins.color import bg_square
+from maze_functions.color import bg_square
 from .variables import NORTH, EAST, SOUTH
+
+
+def clear_screen() -> None:
+    print("\033[H\033[J", end="")
 
 
 def maze_viewer(grid: list[list[int]], color: list[int],
                 entry: tuple[int], exit: tuple[int]) -> None:
+    clear_screen()
     symbol: str = bg_square(color[0], color[1], color[2])
     count_x: int = 0
     count_y: int = 0
@@ -30,7 +35,3 @@ def maze_viewer(grid: list[list[int]], color: list[int],
         print("".join(line2))
         count_x += 1
     print("".join(line3))
-
-
-def clear_screen() -> None:
-    print("\033[H\033[J", end="")
