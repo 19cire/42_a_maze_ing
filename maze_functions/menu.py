@@ -1,6 +1,7 @@
 from maze_functions.show_maze import maze_viewer, clear_screen
 from maze_functions.color import change_color
 from maze_functions.mazegen import build_the_grid, carve_maze
+from a_maze_ing import main
 
 
 def new_color(grid: list[list[int]],
