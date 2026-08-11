@@ -3,9 +3,7 @@
 import sys
 import random
 from maze_functoins.file_reader import read_file
-from maze_functoins.color import change_color, bg_square
 from maze_functoins.mazegen import build_the_grid, carve_maze
-from maze_functoins.show_maze import maze_viewer
 
 
 class SizeError(Exception):
@@ -53,10 +51,16 @@ def show_menu() -> None:
 
 
 def main(config_data: dict[str, str]) -> None:
+    entry: tuple[int] = int(config_data["ENTRY"][0]), int(
+        config_data["ENTRY"][1])
+    exit: tuple[int] = int(config_data["EXIT"][0]), int(
+        config_data["EXIT"][1])
     grid = build_the_grid(
         int(config_data["WIDTH"]), int(config_data["HEIGHT"]))
-    carve_maze(grid, 3, 3, random.Random(42))
-    maze_viewer(grid)
+    print(entry)
+    print(exit)
+
+    carve_maze(grid, 3, 3, random.Random(12), entry, exit)
 
 
 if __name__ == "__main__":
