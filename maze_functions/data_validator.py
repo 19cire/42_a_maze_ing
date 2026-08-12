@@ -30,5 +30,5 @@ def check_data(data: dict[str]) -> None:
     if any(x >= width or y >= height for x, y in (entry, maze_exit)):
         raise OutOfBoundsError(
             "The Entry and Exit points must be inside the Maze")
-    if data["PERFECT"] != "True" or data["PERFECT"] != "False":
+    if data["PERFECT"] not in ("True", "False"):
         raise PerfectError("The value of 'PERFECT' must be True or False")
