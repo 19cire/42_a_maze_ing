@@ -6,27 +6,27 @@ def clear_screen() -> None:
     print("\033[H\033[J", end="")
 
 
-def maze_viewer(grid: list[list[int]], color: list[int],
+def maze_viewer(grid: list[list[int]], color: int,
                 entry: tuple[int], exit: tuple[int]) -> None:
     clear_screen()
-    symbol: str = bg_square(color[0], color[1], color[2])
+    symbol: str = bg_square(color)
     count_x: int = 0
     count_y: int = 0
     for x in grid:
         line1: list[str] = [symbol]
-        line2: list[str] = [symbol, "  "]
+        line2: list[str] = [symbol]
         line3: list[str] = [symbol]
         count_y = 0
         for y in x:
             line1.append(symbol if y & NORTH else "  ")
             line1.append(symbol)
-            line2.append(symbol if y & EAST else "  ")
             if entry == (count_x, count_y):
-                line2.append("🟢")
+                line2.append("😄")
             elif exit == (count_x, count_y):
-                line2.append("🏆")
+                line2.append("🥳")
             else:
                 line2.append("  ")
+            line2.append(symbol if y & EAST else "  ")
             line3.append(symbol if y & SOUTH else "  ")
             line3.append(symbol)
             count_y += 1

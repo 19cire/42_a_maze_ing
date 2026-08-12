@@ -9,7 +9,7 @@ def new_color(grid: list[list[int]],
               exit: tuple[int]
               ) -> None:
     clear_screen()
-    color: list[int] = change_color()
+    color: int = change_color()
     maze_viewer(grid, color, entry, exit)
 
 
@@ -49,18 +49,22 @@ def show_menu(grid: list[list[int]], config_data: dict[str, str]
         config_data["ENTRY"][1])
     maze_exit: tuple[int] = int(config_data["EXIT"][0]), int(
         config_data["EXIT"][1])
-    number = int(input("What you wanna do?"))
-    if number == 1:
-        new_color(grid, entry, maze_exit)
-    elif number == 2:
-        main(config_data, True)
-    elif number == 3:
-        say_hello()
-    elif number == 4:
-        store_maze(grid, config_data)
-    elif number == 5:
-        print("bye!")
-        exit(0)
-    else:
-        print("Wrong input number!")
-    show_menu(grid, config_data)
+    number = int(input("What do you wanna do?"))
+    try:
+        if number == 1:
+            new_color(grid, entry, maze_exit)
+        elif number == 2:
+            main(config_data, True)
+        elif number == 3:
+            say_hello()
+        elif number == 4:
+            store_maze(grid, config_data)
+        elif number == 5:
+            print("bye!")
+            exit(0)
+        else:
+            print("Wrong input number!")
+        show_menu(grid, config_data)
+    except ValueError as e:
+        print(e)
+        print("Wrong input! Please, enter a number beteween 1 and 5")

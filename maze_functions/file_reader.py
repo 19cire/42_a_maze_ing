@@ -1,3 +1,5 @@
+
+
 def read_file(file: str) -> dict[str, str]:
     data = {}
     try:
@@ -9,6 +11,6 @@ def read_file(file: str) -> dict[str, str]:
                     data[value[0]] = value[1].split(",")
                 else:
                     data[value[0]] = value[1]
-    except FileNotFoundError as e:
+    except (FileNotFoundError, IndexError) as e:
         print(f"{e.__class__.__name__}: {e}")
     return data
