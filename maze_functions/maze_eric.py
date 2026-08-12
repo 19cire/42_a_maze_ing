@@ -1,4 +1,5 @@
 from typing import Any
+from color import bg_square
 
 
 class MazeBox():
@@ -29,10 +30,9 @@ def show_maze(maze_board: dict[tuple[int, int], MazeBox],
     last_key = next(reversed(maze_board))
     height: int = maze_board[last_key].y
     width: int = maze_board[last_key].x
-    color1 = change_color()
-    color2 = change_color()
+
     for line in range(height + 1):
-        symbol: str = bg_square(color1[0], color1[1], color1[2])
+        symbol: str = bg_square(21)
         line1: list[str] = [symbol]
         line2: list[str] = [symbol]
         line3: list[str] = [symbol]
@@ -42,7 +42,7 @@ def show_maze(maze_board: dict[tuple[int, int], MazeBox],
                 (row, line)) else line1.append("  ")
             line1.append(symbol)
 
-            line2.append(bg_square(color2[0], color2[1], color2[2])) if (
+            line2.append(bg_square(1)) if (
                 row, line) in fourty else line2.append("  ")
             line2.append(symbol) if maze_board.get(
                 (row, line)) else line2.append("  ")

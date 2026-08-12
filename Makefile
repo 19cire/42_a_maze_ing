@@ -12,9 +12,8 @@ install: $(VENV)
 
 all: run
 
-run: $(VENV)
-	@echo "YOU ARE A-MAZE-ING!"
-	$(PYTHON) $(SRC) $(CONFIG)
+run:
+	python3 a_maze_ing.py config.txt $(ARGS)
 
 test: 
 	@echo "Running test..."

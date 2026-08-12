@@ -114,5 +114,5 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
             neighbour_y = current_y + dy
             visited.add((neighbour_x, neighbour_y))
             stack.append((neighbour_x, neighbour_y))
-        maze_viewer(grid, [255, 120, 0], entry, exit)
+        maze_viewer(grid, 21, entry, exit)
         time.sleep(0.03)

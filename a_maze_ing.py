@@ -2,15 +2,17 @@
 # from typing import Any
 import sys
 import random
+import time
 import numpy as np
 from maze_functions.color import change_color
 from maze_functions.show_maze import maze_viewer, clear_screen
 from maze_functions.file_reader import read_file
 from maze_functions.mazegen import build_the_grid, carve_maze
-
-
-class SizeError(Exception):
-    pass
+from maze_functions.data_validator import (check_data,
+                                           SizeError,
+                                           LessThanZeroError,
+                                           OutOfBoundsError,
+                                           PerfectError)
 
 
 def new_color(grid: list[list[int]],
@@ -18,7 +20,7 @@ def new_color(grid: list[list[int]],
               exit: tuple[int]
               ) -> None:
     clear_screen()
-    color: list[int] = change_color()
+    color: int = change_color()
     maze_viewer(grid, color, entry, exit)
 
 
@@ -84,13 +86,33 @@ def main(config_data: dict[str, str], new: bool = False) -> None:
         int(config_data["WIDTH"]), int(config_data["HEIGHT"]))
     if new:
         seed = np.random.randint(0, 1000)
-        carve_maze(grid, 3, 3, random.Random(seed), entry, maze_exit)
+        carve_maze(grid, 0, 0, random.Random(seed), entry, maze_exit)
     else:
         carve_maze(grid, 0, 0, random.Random(42), entry, maze_exit)
-    show_menu(grid, config_data)
+    try:
+        show_menu(grid, config_data)
+    except ValueError as e:
+        print(f"{e.__name__.__class__} Please choose a number between 1 - 5!")
+        show_menu(grid, config_data)
 
 
 if __name__ == "__main__":
+    if "--perfect" in sys.argv:
+        print("PERFECT MODE IS ACTIVATED!!!")
+        time.sleep(2)
+
     config_file: str = sys.argv[1]
-    config_data: dict[str, str] = read_file(config_file)
-    main(config_data)
+    try:
+        config_data: dict[str, str] = read_file(config_file)
+        check_data(config_data)
+        main(config_data)
+    except (SizeError,
+            LessThanZeroError,
+            OutOfBoundsError,
+            ValueError,
+            PerfectError
+            ) as e:
+        print(e)
+    except KeyError as e:
+        print(f"{e.__class__.__name__}: Check the keys in your config file." +
+              f"The {e} - key is missing.")
