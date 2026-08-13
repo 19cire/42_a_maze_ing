@@ -20,9 +20,9 @@ def maze_viewer(grid: list[list[int]], color: int,
         for y in x:
             line1.append(symbol if y & NORTH else "  ")
             line1.append(symbol)
-            if entry == (count_x, count_y):
+            if entry == (count_y, count_x):
                 line2.append("😄")
-            elif exit == (count_x, count_y):
+            elif exit == (count_y, count_x):
                 line2.append("🥳")
             else:
                 line2.append("  ")
