@@ -1,7 +1,7 @@
-from maze_functions.show_maze import maze_viewer, clear_screen
-from maze_functions.color import change_color
-from maze_functions.mazegen import build_the_grid, carve_maze
-from a_maze_ing import main
+from .show_maze import maze_viewer, clear_screen
+from .color import change_color
+from .generator import generate_maze
+from .path import shortest_path
 
 
 def new_color(grid: list[list[int]],
@@ -13,13 +13,10 @@ def new_color(grid: list[list[int]],
     maze_viewer(grid, color, entry, exit)
 
 
-def new_maze() -> None:
-    grid = build_the_grid
-    carve_maze(grid)
-
-
-def say_hello() -> None:
-    print("Hello")
+def show_path(grid: list[list[int]], entry: tuple[int, int],
+              maze_exit: tuple[int, int]
+              ) -> None:
+    shortest_path(grid, entry, maze_exit)
 
 
 def store_maze(grid: list[list[int]], config_data: dict[str, str]) -> None:
@@ -33,6 +30,11 @@ def store_maze(grid: list[list[int]], config_data: dict[str, str]) -> None:
         for line in hex_grid:
             f.write(line)
             f.write("\n")
+        f.write("\n")
+        f.write(f"Entry: {config_data["ENTRY"]}\n")
+        f.write(f"EXIT: {config_data["EXIT"]}\n")
+        f.write("The shortest path: ???\n")
+
     clear_screen()
     print("The maze is stored in maze.txt")
 
@@ -42,7 +44,7 @@ def show_menu(grid: list[list[int]], config_data: dict[str, str]
     print("====MAZE GENERATOR====")
     print("1) Change color")
     print("2) new maze")
-    print("3) say hello")
+    print("3) show_path")
     print("4) store maze")
     print("5) quit")
     entry: tuple[int] = int(config_data["ENTRY"][0]), int(
@@ -54,9 +56,9 @@ def show_menu(grid: list[list[int]], config_data: dict[str, str]
         if number == 1:
             new_color(grid, entry, maze_exit)
         elif number == 2:
-            main(config_data, True)
+            grid: list[list[int]] = generate_maze(config_data, True)
         elif number == 3:
-            say_hello()
+            show_path(grid, entry, maze_exit)
         elif number == 4:
             store_maze(grid, config_data)
         elif number == 5:
@@ -66,5 +68,5 @@ def show_menu(grid: list[list[int]], config_data: dict[str, str]
             print("Wrong input number!")
         show_menu(grid, config_data)
     except ValueError as e:
-        print(e)
-        print("Wrong input! Please, enter a number beteween 1 and 5")
+        print(f"{e.__class__.__name__}: Please choose a number between 1 - 5!")
+        show_menu(grid, config_data)
