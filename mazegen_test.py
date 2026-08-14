@@ -1,10 +1,12 @@
 import random
-from maze_functions.mazegen import (build_the_grid, is_wall_closed, open_wall,
+from mazegen import (build_the_grid, is_wall_closed, open_wall,
                                     get_unvisited_neighbours, carve_maze,
+                                    construct_pattern_42,
+                                    check_connectivity,
                                     DIRECTION_STEP,
                                     ALL_WALLS_CLOSED
                                     )
-from maze_functions.variables import NORTH, EAST, WEST, SOUTH
+from mazegen import NORTH, EAST, WEST, SOUTH
 grid = build_the_grid(20, 15)
 print("===================================================")
 print(grid[4][4], grid[4][5])
@@ -49,7 +51,7 @@ print("interior (4,4), ALL visited:", unvisited)
 print("expected: [] =", [])
 print("===================================================")
 rng = random.Random(42)
-carve_maze(grid, 0, 0, rng, (0, 0), (5, 5))
+carve_maze(grid, 0, 0, rng)
 untouched = 0
 for row in grid:
     for cell in row:
@@ -59,7 +61,7 @@ print("cells never reached:", untouched, "- expected 0")
 print("===================================================")
 grid = build_the_grid(20, 15)
 rng = random.Random(42)
-carve_maze(grid, 0, 0, rng, (1, 1), (8, 8))
+carve_maze(grid, 0, 0, rng)
 for row in grid:
     line = ""
     for cell in row:
@@ -76,12 +78,28 @@ print("open walls:", open_count // 2, "- expected 299")
 print("===================================================")
 grid_a = build_the_grid(20, 15)
 rng_a = random.Random(42)
-carve_maze(grid_a, 0, 0, rng_a, (1, 1), (8, 8))
+carve_maze(grid_a, 0, 0, rng_a)
 grid_b = build_the_grid(20, 15)
 rng_b = random.Random(42)
-carve_maze(grid_b, 0, 0, rng_b, (1, 1), (8, 8))
+carve_maze(grid_b, 0, 0, rng_b)
 grid_c = build_the_grid(20, 15)
 rng_c = random.Random(7)
-carve_maze(grid_c, 0, 0, rng_c, (1, 1), (8, 8))
+carve_maze(grid_c, 0, 0, rng_c)
 print(grid_a == grid_b)
 print(grid_a == grid_c)
+print("===================================================")
+cells = construct_pattern_42(20, 15)
+for y in range(15):
+    line = ""
+    for x in range(20):
+        line += "#" if (x, y) in cells else "."
+    print(line)
+print("===================================================")
+check_connectivity(20, 15, construct_pattern_42(20, 15))
+check_connectivity(20, 15, set())
+wall = {(10, y) for y in range(15)}
+try:
+    check_connectivity(20, 15, wall)
+    print("No error")
+except ValueError as error:
+    print("correctly refused!:", error)
