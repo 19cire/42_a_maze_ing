@@ -7,16 +7,24 @@ from .path import shortest_path
 def new_color(grid: list[list[int]],
               entry: tuple[int],
               exit: tuple[int]
-              ) -> None:
+              ) -> int:
     clear_screen()
     color: int = change_color()
-    maze_viewer(grid, color, entry, exit)
+    maze_viewer(grid, entry, exit, color)
 
 
 def show_path(grid: list[list[int]], entry: tuple[int, int],
-              maze_exit: tuple[int, int]
+              end: tuple[int, int], color: int
               ) -> None:
-    shortest_path(grid, entry, maze_exit)
+    path: list[tuple[int, int]] = shortest_path(grid, entry, end)
+    maze_viewer(grid, entry, end, color, path)
+
+
+def hide_path(grid: list[list[int]], entry: tuple[int, int],
+              end: tuple[int, int], color: int
+              ) -> None:
+    clear_screen()
+    maze_viewer(grid, entry, end, color)
 
 
 def store_maze(grid: list[list[int]], config_data: dict[str, str]) -> None:
@@ -39,26 +47,40 @@ def store_maze(grid: list[list[int]], config_data: dict[str, str]) -> None:
     print("The maze is stored in maze.txt")
 
 
-def show_menu(grid: list[list[int]], config_data: dict[str, str]
+def show_menu(grid: list[list[int]],
+              config_data: dict[str, str],
+              path: bool | None = False
               ) -> None:
-    print("====MAZE GENERATOR====")
-    print("1) Change color")
-    print("2) new maze")
-    print("3) show_path")
-    print("4) store maze")
-    print("5) quit")
+
     entry: tuple[int] = int(config_data["ENTRY"][0]), int(
         config_data["ENTRY"][1])
     maze_exit: tuple[int] = int(config_data["EXIT"][0]), int(
         config_data["EXIT"][1])
-    number = int(input("What do you wanna do?"))
+    color: int = 42
+
+    print("====MAZE GENERATOR====")
+    print("1) Change color")
+    print("2) new maze")
+    if path:
+        print("3) hide_path")
+    else:
+        print("3) show_path")
+    print("4) store maze")
+    print("5) quit")
+    number: int = int(input("What do you wanna do?"))
+
     try:
         if number == 1:
-            new_color(grid, entry, maze_exit)
+            color = new_color(grid, entry, maze_exit)
         elif number == 2:
             grid: list[list[int]] = generate_maze(config_data, True)
         elif number == 3:
-            show_path(grid, entry, maze_exit)
+            if path:
+                hide_path(grid, entry, maze_exit, color)
+                path = False
+            else:
+                show_path(grid, entry, maze_exit, color)
+                path = True
         elif number == 4:
             store_maze(grid, config_data)
         elif number == 5:
@@ -66,7 +88,7 @@ def show_menu(grid: list[list[int]], config_data: dict[str, str]
             exit(0)
         else:
             print("Wrong input number!")
-        show_menu(grid, config_data)
+        show_menu(grid, config_data, path)
     except ValueError as e:
         print(f"{e.__class__.__name__}: Please choose a number between 1 - 5!")
-        show_menu(grid, config_data)
+        show_menu(grid, config_data, path)

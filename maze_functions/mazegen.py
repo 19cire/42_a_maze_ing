@@ -1,5 +1,5 @@
 from .show_maze import maze_viewer, clear_screen
-import time
+# import time
 import random
 from .variables import (ALL_WALLS_CLOSED,
                         DIRECTION_STEP,
@@ -114,5 +114,5 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
             neighbour_y = current_y + dy
             visited.add((neighbour_x, neighbour_y))
             stack.append((neighbour_x, neighbour_y))
-        maze_viewer(grid, 21, entry, exit)
-        time.sleep(0.03)
+        maze_viewer(grid, entry, exit)
+        # time.sleep(0.03)
