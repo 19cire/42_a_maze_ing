@@ -22,7 +22,7 @@ def check_data(data: dict[str]) -> None:
         data["ENTRY"][1])
     maze_exit: tuple[int] = int(data["EXIT"][0]), int(
         data["EXIT"][1])
-    if width < 10 or height < 10:
+    if width < 12 or height < 9:
         raise SizeError("The width and height must be greater than 10!")
     if min(*entry, *maze_exit) < 0:
         raise LessThanZeroError(
