@@ -28,6 +28,10 @@ def hide_path(grid: list[list[int]], entry: tuple[int, int],
 
 
 def store_maze(grid: list[list[int]], config_data: dict[str, str]) -> None:
+    entry: tuple[int] = int(config_data["ENTRY"][0]), int(
+        config_data["ENTRY"][1])
+    end: tuple[int] = int(config_data["EXIT"][0]), int(
+        config_data["EXIT"][1])
     hex_grid: list[str] = []
     for line in grid:
         new_line: list[str] = []
@@ -39,9 +43,20 @@ def store_maze(grid: list[list[int]], config_data: dict[str, str]) -> None:
             f.write(line)
             f.write("\n")
         f.write("\n")
-        f.write(f"Entry: {config_data["ENTRY"]}\n")
-        f.write(f"EXIT: {config_data["EXIT"]}\n")
-        f.write("The shortest path: ???\n")
+        f.write(f"Entry: {entry}\n")
+        f.write(f"EXIT: {end}\n")
+        f.write("The shortest path:\n")
+        current: tuple[int, int] = entry
+        for cell in shortest_path(grid, entry, end):
+            if cell == (current[0] + 1, current[1]):
+                f.write("E")
+            elif cell == (current[0] - 1, current[1]):
+                f.write("W")
+            elif cell == (current[0], current[1] + 1):
+                f.write("N")
+            elif cell == (current[0], current[1] - 1):
+                f.write("S")
+            current = cell
 
     clear_screen()
     print("The maze is stored in maze.txt")

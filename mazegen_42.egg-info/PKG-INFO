@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: mazegen_42
+Version: 1.0
+Summary: A maze generator and solver
+Requires-Python: >=3.14
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Dynamic: license-file
+
+*The very first line must be italicized and read: This project has been created as part
+of the 42 curriculum by sgarba, edraheim.*
+
+###Description

@@ -212,6 +212,7 @@ class MazeGenerator:
         seed: the seed of the maze's generation
         perfect: a bool telling us if maze is perfect or not
     """
+
     def __init__(self, width: int, height: int, maze_entry: tuple[int, int],
                  maze_exit: tuple[int, int], seed: int, perfect: bool) -> None:
         self.width = width
