@@ -1,78 +1,129 @@
-*The very first line must be italicized and read: This project has been created as part
-of the 42 curriculum by sgarba, edraheim.*
+*This project has been created as part of the 42 curriculum by sgarba, edraheim.*
 
 # A-MAZE-ING-42
 
 ## Description
-This is the "A-MAZE-ING" project from the 42 school.
-The goal was to create a reuseable maze generator module and to wirte a program
-that reads the configuration data from the cofig.txt file and creates a maze with the
-maze generator module.
-AMAZING is the root directory of the Project.
-It contains: 
-- the mazegen module in the mazegen directory
-- the a_maze_ing.py file which contains the script to run the program
-- the config.txt file where the maze configuration data is stored
-- the LICENSE.md which contains the MIT licencse
-- the pyproject.toml file to manage the packages
-- the README.md which contains the documents
-- the Makefile which contains the commands to run the program
 
+This is the "A-MAZE-ING" project from 42 School.
+The goal was to create a reusable maze generator module and to write a program
+that reads configuration data from a `config.txt` file and generates a maze
+using the maze generator module.
 
+`AMAZING` is the root directory of the project. It contains:
+
+- the `mazegen` module, in the `mazegen` directory
+- `a_maze_ing.py`, the script used to run the program
+- `config.txt`, where the maze configuration data is stored
+- `LICENSE.md`, containing the MIT license
+- `pyproject.toml`, used to build and manage the package
+- `README.md`, this documentation
+- `Makefile`, containing the commands to run the program
 
 ## Instructions
 
-If you want to intall the maze generator module in your project you have to add the mazegen module to your root directory first. Then run following the command to build the package
-```bash 
-            pip install build --break-system-packages
-            python3 -m build
-```
-This will create the directoary \dist with the files:
-- dist/mazegen_eric-1.0.0-py3-none-any.whl
-- dist/mazegen_eric-1.0.0.tar.gz
+### Installing the maze generator module
 
-Now you can install the package in your project with the command:
+If you want to install the maze generator module in your own project, add the
+`mazegen` module to your project's root directory. Then run the following
+commands to build the package:
 
-```bash 
-        pip install dist/mazegen_eric-1.0.0-py3-none-any.whl    
-```
-and import it to your files with:
-```bash 
-        from mazgen import MazeGenerator
-```
-Now you are ready to create new instances of the maze generator:
-
-```bash   
-        maze = MazeGenerator(10, 10)
-        maze.generate()
-```
-
-To run the program run use the command:
-```bash   
-    make run
-```
-To run the programm in the perfect mode use the command
-```bash   
-    make run $ARGS='--perfect'
-```
-• The complete structure and format of your config file.
-# config.txt structre
-The config .txt file contains the configuration data of the maze. The data is stored in KEY=VALUE pairs as strings.
 ```bash
-    WIDTH=20
-    HEIGHT=15
-    ENTRY=1,2
-    EXIT=12,10
-    OUTPUT_FILE=maze.txt
-    PERFECT=False
+pip install build --break-system-packages
+python3 -m build
 ```
-## Agorithm - DFS
-We have used the DFS (depth-first-search) algorithm to create the maze. The idea of DFS is that the Algo goes always in one direction until it has to stop for example it hits the 42-cell or a border then it goes back until it finds the last valid cell from wehre it can go in another direction until it has to stop and then it repeats the process until  all cells are visited. We have chosen this the DFS algorithm because it is perfect to create "--perfect" mazes.
+
+This creates a `dist/` directory containing:
+
+- `dist/mazegen_eric-1.0.0-py3-none-any.whl`
+- `dist/mazegen_eric-1.0.0.tar.gz`
+
+Install the package into your project with:
+
+```bash
+pip install dist/mazegen_eric-1.0.0-py3-none-any.whl
+```
+
+Then import it in your files:
+
+```python
+from mazegen import MazeGenerator
+```
+
+You're now ready to create new instances of the maze generator:
+
+```python
+maze = MazeGenerator(10, 10)
+maze.generate()
+```
+
+### Running the program
+
+To run the program:
+
+```bash
+make run
+```
+
+To run the program in "perfect" mode:
+
+```bash
+make run ARGS="--perfect"
+```
+
+### Config file structure
+
+The `config.txt` file contains the maze's configuration data, stored as
+`KEY=VALUE` pairs, all values as strings.
+
+```bash
+WIDTH=20
+HEIGHT=15
+ENTRY=1,2
+EXIT=12,10
+OUTPUT_FILE=maze.txt
+PERFECT=False
+```
+
+## Algorithm — DFS
+
+We used the DFS (depth-first search) algorithm to generate the maze. The idea
+behind DFS is that the algorithm always moves in one direction until it has
+to stop — for example when it hits an already-visited cell or a border. It
+then backtracks until it finds the last cell from which it can move in
+another, unexplored direction, and continues from there. This process
+repeats until every cell has been visited. We chose DFS because it reliably
+produces "perfect" mazes — mazes with exactly one path between any two cells.
+
+## Path Algorithm — BFS
+
+To solve the shortest-path task, we implemented the BFS (breadth-first
+search) algorithm. In each round, it takes one step in every possible
+direction from the entry cell, storing each visited cell in a dictionary
+that maps the cell to the cell it came from. This makes it straightforward
+to reconstruct the shortest path as soon as the algorithm reaches the exit
+cell.
+
+## Reusability
+
+The `mazegen` module is designed to be reusable in other projects. See the
+[Instructions](#instructions) section above for details on installing and
+using it.
+
+## Team Roles
+
+We split the work between us:
+
+- **sgarba** wrote the DFS algorithm and the `MazeGenerator` class, including
+  all methods used to generate the maze.
+- **edraheim** wrote the BFS algorithm and everything else needed to run and
+  visualize the program, along with the additional project files: `README.md`,
+  `LICENSE.md`, `Makefile`, `pyproject.toml`, `config.txt`, `a_maze_ing.py`,
+  and `.gitignore`.
 
 
 
 
-• What part of your code is reusable, and how.
+
 • Your team and project management with:
 ◦ The roles of each team member.
 ◦ Your anticipated planning and how it evolved until the end
@@ -80,4 +131,6 @@ We have used the DFS (depth-first-search) algorithm to create the maze. The idea
 ◦ Have you used any specific tools? Which ones?
 If you implement advanced features (multiple algorithms, display options), describe them
 in this README.md file.
+
 ## Resources
+
