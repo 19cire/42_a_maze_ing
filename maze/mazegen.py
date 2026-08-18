@@ -168,6 +168,62 @@ def check_connectivity(width: int, height: int,
         raise ValueError("The maze is not connected!")
 
 
+def count_open_walls(cell: int) -> int:
+    """This function count how many walls are open,
+    help to identify dead ends
+
+    Args:
+        cell: the cell's wall we are counting
+
+    Returns:
+        an int telling us how many walls are opened
+    """
+    open_count = 0
+    for direction in DIRECTION_STEP:
+        if not is_wall_closed(cell, direction):
+            open_count += 1
+    return open_count
+
+
+def add_loops(grid: list[list[int]], rng: random.Random,
+              blocked: set[tuple[int, int]] | None = None) -> None:
+    """This functions helps us adding loops for PERFECT=False
+
+    Args:
+        grid: our maze we are working with
+        rng: the random generator object
+        blocked: the blocks of the 42 pattern to avoid
+
+    Returns:
+        None
+    """
+    if blocked is None:
+        blocked = set()
+    dead_ends: list[tuple[int, int]] = []
+    for y in range(len(grid)):
+        for x in range(len(grid[0])):
+            if count_open_walls(grid[y][x]) == 1:
+                dead_ends.append((x, y))
+    for (cell_x, cell_y) in dead_ends:
+        candidate_to_open: list[int] = []
+        for direction in DIRECTION_STEP:
+            dx, dy = DIRECTION_STEP[direction]
+            neighbour_x = cell_x + dx
+            neighbour_y = cell_y + dy
+            if not (neighbour_x >= 0 and neighbour_x < len(grid[0])
+                    and neighbour_y >= 0 and neighbour_y < len(grid)):
+                continue
+            if (neighbour_x, neighbour_y) in blocked:
+                continue
+            if not is_wall_closed(grid[cell_y][cell_x], direction):
+                continue
+            candidate_to_open.append(direction)
+        if candidate_to_open:
+            direction = rng.choice(candidate_to_open)
+            open_wall(grid, cell_x, cell_y, direction)
+    print(len(dead_ends))
+
+
 def carve_maze(grid: list[list[int]], x: int, y: int,
                rng: random.Random, blocked: set[tuple[int, int]]
                | None = None) -> None:
