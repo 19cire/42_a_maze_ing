@@ -1,5 +1,3 @@
-
-
 def read_file(file: str) -> dict[str, str]:
     data = {}
     try:

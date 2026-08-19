@@ -1,16 +1,18 @@
-from maze_functions.color import bg_square
-from .variables import NORTH, EAST, SOUTH
+from maze.maze_functions.color import bg_square
+from ..mazegen import NORTH, EAST, SOUTH
 
 
 def clear_screen() -> None:
+    """This function cleans the Terminal"""
     print("\033[H\033[J", end="")
 
 
 def maze_viewer(grid: list[list[int]],
-                entry: tuple[int],
-                exit: tuple[int],
+                entry: tuple[int, int],
+                exit: tuple[int, int],
+                blocked: list[tuple[int, int]],
                 color: int = 42,
-                path: list[tuple[int,  int]] | None = None
+                path: list[tuple[int,  int]] | None = None,
                 ) -> None:
     clear_screen()
     symbol: str = bg_square(color)
@@ -24,12 +26,15 @@ def maze_viewer(grid: list[list[int]],
         for y in x:
             line1.append(symbol if y & NORTH else "  ")
             line1.append(symbol)
+
             if entry == (count_y, count_x):
                 line2.append("😄")
             elif exit == (count_y, count_x):
                 line2.append("🥳")
             elif path and (count_y, count_x) in path[1:-1]:
                 line2.append("🐠")
+            elif (count_y, count_x) in blocked:
+                line2.append(bg_square(24))
             else:
                 line2.append("  ")
             line2.append(symbol if y & EAST else "  ")

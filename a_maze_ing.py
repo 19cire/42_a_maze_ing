@@ -1,26 +1,48 @@
-#!/usr/bin/python3
+# !/usr/bin/python3
 # from typing import Any
 import sys
 import time
-from mazegen.maze_functions.generator import generate_maze
-from mazegen.maze_functions.file_reader import read_file
-from mazegen.maze_functions.menu import show_menu
-from mazegen.maze_functions.data_validator import (check_data,
-                                                   SizeError,
-                                                   LessThanZeroError,
-                                                   OutOfBoundsError,
-                                                   PerfectError)
+# from mazegen.maze_functions.generator import generate_maze
+from file_reader import read_file
+from maze import MazeGenerator
+from maze.maze_functions.show_maze import maze_viewer
+from maze.maze_functions.menu import show_menu
+from maze.maze_functions.color import change_color
+from maze.maze_functions.data_validator import (check_data,
+                                                SizeError,
+                                                LessThanZeroError,
+                                                OutOfBoundsError,
+                                                PerfectError)
 
 
 def main(config_data: dict[str, str], new: bool = False) -> None:
-    grid: list[list[int]] = generate_maze(config_data)
-    try:
-        show_menu(grid, config_data)
-    except ValueError as e:
-        print(
-            f"{e.__class__.__name__} Please choose a number between 1 - 5" +
-            " and press enter!")
-        show_menu(grid, config_data)
+    entry: tuple[int] = int(config_data["ENTRY"][0]), int(
+        config_data["ENTRY"][1])
+    end: tuple[int] = int(config_data["EXIT"][0]), int(
+        config_data["EXIT"][1])
+    maze = MazeGenerator(
+        int(config_data["WIDTH"]),
+        int(config_data["HEIGHT"]),
+        entry,
+        end,
+        int(config_data["SEED"]),
+        bool(config_data["PERFECT"])
+    )
+    color = change_color()
+    maze.greet()
+    maze.generate()
+
+    maze_viewer(maze.grid, entry, end, maze.blocked, color)
+    show_menu(maze, config_data)
+
+    # grid: list[list[int]] = generate_maze(config_data)
+    # try:
+    #     show_menu(grid, config_data)
+    # except ValueError as e:
+    #     print(
+    #         f"{e.__class__.__name__} Please choose a number between 1 - 5" +
+    #         " and press enter!")
+    #     show_menu(grid, config_data)
 
 
 if __name__ == "__main__":
@@ -32,6 +54,7 @@ if __name__ == "__main__":
     try:
         config_data: dict[str, str] = read_file(config_file)
         check_data(config_data)
+        print(config_data)
         main(config_data)
     except (SizeError,
             LessThanZeroError,

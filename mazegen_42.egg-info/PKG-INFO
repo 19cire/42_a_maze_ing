@@ -1,0 +1,145 @@
+Metadata-Version: 2.4
+Name: mazegen_42
+Version: 1.0
+Summary: A maze generator
+Requires-Python: >=3.14
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Dynamic: license-file
+
+*This project has been created as part of the 42 curriculum by sgarba, edraheim.*
+
+# A-MAZE-ING-42
+
+## Description
+
+This is the "A-MAZE-ING" project from 42 School.
+The goal was to create a reusable maze generator module and to write a program
+that reads configuration data from a `config.txt` file and generates a maze
+using the maze generator module.
+
+`AMAZING` is the root directory of the project. It contains:
+
+- the `mazegen` module, in the `mazegen` directory
+- `a_maze_ing.py`, the script used to run the program
+- `config.txt`, where the maze configuration data is stored
+- `LICENSE.md`, containing the MIT license
+- `pyproject.toml`, used to build and manage the package
+- `README.md`, this documentation
+- `Makefile`, containing the commands to run the program
+
+## Instructions
+
+### Installing the maze generator module
+
+If you want to install the maze generator module in your own project, add the
+`mazegen` module to your project's root directory. Then run the following
+commands to build the package:
+
+```bash
+pip install build --break-system-packages
+python3 -m build
+```
+
+This creates a `dist/` directory containing:
+
+- `dist/mazegen_eric-1.0.0-py3-none-any.whl`
+- `dist/mazegen_eric-1.0.0.tar.gz`
+
+Install the package into your project with:
+
+```bash
+pip install dist/mazegen_eric-1.0.0-py3-none-any.whl
+```
+
+Then import it in your files:
+
+```python
+from mazegen import MazeGenerator
+```
+
+You're now ready to create new instances of the maze generator:
+
+```python
+maze = MazeGenerator(10, 10)
+maze.generate()
+```
+
+### Running the program
+
+To run the program:
+
+```bash
+make run
+```
+
+To run the program in "perfect" mode:
+
+```bash
+make run ARGS="--perfect"
+```
+
+### Config file structure
+
+The `config.txt` file contains the maze's configuration data, stored as
+`KEY=VALUE` pairs, all values as strings.
+
+```bash
+WIDTH=20
+HEIGHT=15
+ENTRY=1,2
+EXIT=12,10
+OUTPUT_FILE=maze.txt
+PERFECT=False
+```
+
+## Algorithm — DFS
+
+We used the DFS (depth-first search) algorithm to generate the maze. The idea
+behind DFS is that the algorithm always moves in one direction until it has
+to stop — for example when it hits an already-visited cell or a border. It
+then backtracks until it finds the last cell from which it can move in
+another, unexplored direction, and continues from there. This process
+repeats until every cell has been visited. We chose DFS because it reliably
+produces "perfect" mazes — mazes with exactly one path between any two cells.
+
+## Path Algorithm — BFS
+
+To solve the shortest-path task, we implemented the BFS (breadth-first
+search) algorithm. In each round, it takes one step in every possible
+direction from the entry cell, storing each visited cell in a dictionary
+that maps the cell to the cell it came from. This makes it straightforward
+to reconstruct the shortest path as soon as the algorithm reaches the exit
+cell.
+
+## Reusability
+
+The `mazegen` module is designed to be reusable in other projects. See the
+[Instructions](#instructions) section above for details on installing and
+using it.
+
+## Team Roles
+
+We split the work between us:
+
+- **sgarba** wrote the DFS algorithm and the `MazeGenerator` class, including
+  all methods used to generate the maze.
+- **edraheim** wrote the BFS algorithm and everything else needed to run and
+  visualize the program, along with the additional project files: `README.md`,
+  `LICENSE.md`, `Makefile`, `pyproject.toml`, `config.txt`, `a_maze_ing.py`,
+  and `.gitignore`.
+
+
+
+
+
+• Your team and project management with:
+◦ The roles of each team member.
+◦ Your anticipated planning and how it evolved until the end
+◦ What worked well and what could be improved
+◦ Have you used any specific tools? Which ones?
+If you implement advanced features (multiple algorithms, display options), describe them
+in this README.md file.
+
+## Resources
+
