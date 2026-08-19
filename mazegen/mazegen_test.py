@@ -1,12 +1,12 @@
 import random
-from maze.mazegen import (build_the_grid, is_wall_closed, open_wall,
-                          get_unvisited_neighbours, carve_maze,
-                          construct_pattern_42,
-                          check_connectivity,
-                          DIRECTION_STEP,
-                          ALL_WALLS_CLOSED
-                          )
-from maze.mazegen import NORTH, EAST, WEST, SOUTH
+from mazegen.mazegen import (build_the_grid, is_wall_closed, open_wall,
+                             get_unvisited_neighbours, carve_maze,
+                             construct_pattern_42,
+                             check_connectivity,
+                             DIRECTION_STEP,
+                             ALL_WALLS_CLOSED
+                             )
+from mazegen.mazegen import NORTH, EAST, WEST, SOUTH
 grid = build_the_grid(20, 15)
 print("===================================================")
 print(grid[4][4], grid[4][5])

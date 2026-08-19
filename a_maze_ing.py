@@ -2,14 +2,14 @@
 # from typing import Any
 import sys
 import time
-from maze_functions.generator import generate_maze
-from maze_functions.file_reader import read_file
-from maze_functions.menu import show_menu
-from maze_functions.data_validator import (check_data,
-                                           SizeError,
-                                           LessThanZeroError,
-                                           OutOfBoundsError,
-                                           PerfectError)
+from mazegen.maze_functions.generator import generate_maze
+from mazegen.maze_functions.file_reader import read_file
+from mazegen.maze_functions.menu import show_menu
+from mazegen.maze_functions.data_validator import (check_data,
+                                                   SizeError,
+                                                   LessThanZeroError,
+                                                   OutOfBoundsError,
+                                                   PerfectError)
 
 
 def main(config_data: dict[str, str], new: bool = False) -> None:

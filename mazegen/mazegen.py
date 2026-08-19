@@ -213,17 +213,22 @@ class MazeGenerator:
         perfect: a bool telling us if maze is perfect or not
     """
 
-    def __init__(self, width: int, height: int, maze_entry: tuple[int, int],
-                 maze_exit: tuple[int, int], seed: int, perfect: bool) -> None:
+    def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
-        self.maze_entry = maze_entry
-        self.maze_exit = maze_exit
-        self.seed = seed
-        self.rng = random.Random(self.seed)
-        self.perfect = perfect
-        self.grid: list[list[int]] = []
-        self.solution: list[tuple[int, int]] = []
+
+    # def __init__(self, width: int, height: int, maze_entry: tuple[int, int],
+    #              maze_exit: tuple[int, int],
+    #               seed: int, perfect: bool) -> None:
+    #     self.width = width
+    #     self.height = height
+    #     self.maze_entry = maze_entry
+    #     self.maze_exit = maze_exit
+    #     self.seed = seed
+    #     self.rng = random.Random(self.seed)
+    #     self.perfect = perfect
+    #     self.grid: list[list[int]] = []
+    #     self.solution: list[tuple[int, int]] = []
 
     def generate(self) -> None:
         # Reset the random generator from the seed, so repeated calls
