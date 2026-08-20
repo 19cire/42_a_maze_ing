@@ -1,14 +1,19 @@
 import random
-from mazegen.mazegen import (build_the_grid, is_wall_closed, open_wall,
-                             get_unvisited_neighbours, carve_maze,
-                             construct_pattern_42,
-                             check_connectivity,
-                             count_open_walls,
-                             add_loops,
-                             DIRECTION_STEP,
-                             ALL_WALLS_CLOSED
-                             )
-from mazegen.mazegen import NORTH, EAST, WEST, SOUTH
+from mazegen import (build_the_grid, is_wall_closed, open_wall,
+                          get_unvisited_neighbours, carve_maze,
+                          construct_pattern_42,
+                          check_connectivity,
+                          count_open_walls,
+                          add_loops,
+                          would_create_3x3_open_area,
+                          shortest_path,
+                          store_maze,
+                          entry_exit_validation,
+                          MazeGenerator,
+                          DIRECTION_STEP,
+                          ALL_WALLS_CLOSED
+                          )
+from mazegen import NORTH, EAST, WEST, SOUTH
 grid = build_the_grid(20, 15)
 print("====Grid buiding test====")
 print(grid[4][4], grid[4][5])
@@ -117,7 +122,7 @@ after = 0
 for row in grid:
     for cell in row:
         if count_open_walls(cell) == 1:
-            after += 1
+            after  += 1
 print("dead-ends after:", after, "- was 26")
 open_count = 0
 for row in grid:
@@ -125,7 +130,61 @@ for row in grid:
         for direction in DIRECTION_STEP:
             if not is_wall_closed(cell, direction):
                 open_count += 1
-print("open walls:", open_count // 2, "- expected 325")
+print("open walls:", open_count // 2, "- expected 304")
 for (x, y) in blocked:
     if grid[y][x] != ALL_WALLS_CLOSED:
         print("PATTERN BROKEN at", x, y)
+print("\n====3x3 open area test====")
+grid = build_the_grid(5, 5)
+open_wall(grid, 1, 1, EAST)
+open_wall(grid, 2, 1, EAST)
+open_wall(grid, 1, 2, EAST)
+open_wall(grid, 2, 2, EAST)
+open_wall(grid, 1, 3, EAST)
+open_wall(grid, 2, 3, EAST)
+open_wall(grid, 1, 1, SOUTH)
+open_wall(grid, 2, 1, SOUTH)
+open_wall(grid, 3, 1, SOUTH)
+open_wall(grid, 1, 2, SOUTH)
+open_wall(grid, 3, 2, SOUTH)
+answer = would_create_3x3_open_area(grid, 2, 2, SOUTH)
+print(answer)
+print("\n====Mazegenerator test===")
+generator = MazeGenerator(20, 15, (1,1), (18, 13), 42, False)
+generator.generate()
+for row in generator.grid:
+    print("".join(f"{cell:x}" for cell in row))
+print("\n====Path test====")
+grid = generator.grid
+result = shortest_path(generator.grid, (1, 1), (18, 13))
+store_maze(generator.grid, (1, 1), (18, 13), "test_output.txt")
+print(result)
+for i in range(len(result) - 1):
+    x1, y1 = result[i]
+    x2, y2 = result[i + 1]
+    for direction, (dx, dy) in DIRECTION_STEP.items():
+        if (x1 + dx, y1 + dy) == (x2, y2):
+            if is_wall_closed(grid[y1][x1], direction):
+                print("WALKS THROUGH A WALL at", x1, y1)
+print("\n====entry and exit valid test====")
+blocked = construct_pattern_42(20, 15)
+try:
+    entry_exit_validation(20, 15, (1, 1), (18, 13), blocked)
+    print("no error")
+except ValueError as error:
+    print("Entry or exit invalid:", error)
+try:
+    entry_exit_validation(20, 15, (99, 1), (5, 99), blocked)
+    print("no error")
+except ValueError as error:
+    print("Entry or exit invalid:", error)
+try:
+    entry_exit_validation(20, 15, (1, 1), (1, 1), blocked)
+    print("no error")
+except ValueError as error:
+    print("Entry or exit invalid:", error)
+try:
+    entry_exit_validation(20, 15, (1, 1), (6, 5), blocked)
+    print("no error")
+except ValueError as error:
+    print("Entry or exit invalid:", error)

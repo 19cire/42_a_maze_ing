@@ -1,6 +1,6 @@
 from .show_maze import maze_viewer, clear_screen
 from .color import change_color
-from maze import MazeGenerator
+from mazegen import MazeGenerator
 import numpy as np
 
 
@@ -16,9 +16,9 @@ def new_color(grid: list[list[int]],
 def store_maze(grid: list[tuple[int, int]],
                config_data: dict[str, str],
                path: list[tuple[int, int]]) -> None:
-    entry: tuple[int] = int(config_data["ENTRY"][0]), int(
+    entry: tuple[int, int] = int(config_data["ENTRY"][0]), int(
         config_data["ENTRY"][1])
-    end: tuple[int] = int(config_data["EXIT"][0]), int(
+    end: tuple[int, int] = int(config_data["EXIT"][0]), int(
         config_data["EXIT"][1])
     hex_grid: list[str] = []
     for line in grid:
@@ -57,7 +57,7 @@ def show_menu(maze: MazeGenerator,
 
     maze_entry: tuple[int, int] = int(config_data["ENTRY"][0]), int(
         config_data["ENTRY"][1])
-    maze_exit: tuple[int] = int(config_data["EXIT"][0]), int(
+    maze_exit: tuple[int, int] = int(config_data["EXIT"][0]), int(
         config_data["EXIT"][1])
     color: int = 42
 

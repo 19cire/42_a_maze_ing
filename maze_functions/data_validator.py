@@ -20,7 +20,7 @@ def check_data(data: dict[str]) -> None:
     height: int = int(data["HEIGHT"])
     entry: tuple[int, int] = int(data["ENTRY"][0]), int(
         data["ENTRY"][1])
-    maze_exit: tuple[int] = int(data["EXIT"][0]), int(
+    maze_exit: tuple[int, int] = int(data["EXIT"][0]), int(
         data["EXIT"][1])
     if width < 12 or height < 9:
         raise SizeError("The width and height must be greater than 10!")

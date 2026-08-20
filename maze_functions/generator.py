@@ -1,4 +1,4 @@
-from .mazegen import build_the_grid, carve_maze
+from mazegen import build_the_grid, carve_maze
 import numpy as np
 import random
 

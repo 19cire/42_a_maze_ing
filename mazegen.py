@@ -185,7 +185,7 @@ def count_open_walls(cell: int) -> int:
 
 def would_create_3x3_open_area(grid: list[list[int]], x: int,
                                y: int, direction: int) -> bool:
-    """This function tell us ifma 3x3 open area is opened
+    """This function tell us if a 3x3 open area is opened
 
     Args:
         grid: our maze we are working with
@@ -196,6 +196,30 @@ def would_create_3x3_open_area(grid: list[list[int]], x: int,
     Returns:
         a bool telling us if a 3x3 open area is present
     """
+    dx, dy = DIRECTION_STEP[direction]
+    neighbour_x = x + dx
+    neighbour_y = y + dy
+    first_by = max(0, max(y, neighbour_y) - 2)
+    last_by = min(min(y, neighbour_y), len(grid) - 3)
+    first_bx = max(0, max(x, neighbour_x) - 2)
+    last_bx = min(min(x, neighbour_x), len(grid[0]) - 3)
+    if direction in (NORTH, WEST):
+        x, y = neighbour_x, neighbour_y
+        direction = DIRECTION_OPPOSITE[direction]
+    for by in range(first_by, last_by + 1):
+        for bx in range(first_bx, last_bx + 1):
+            fully_open = True
+            for cy in range(by, by + 3):
+                for cx in range(bx, bx + 3):
+                    if (cx < bx + 2 and is_wall_closed(grid[cy][cx], EAST) and
+                            not (cx == x and cy == y and direction == EAST)):
+                        fully_open = False
+                    if (cy < by + 2 and is_wall_closed(grid[cy][cx], SOUTH) and
+                            not (cx == x and cy == y and direction == SOUTH)):
+                        fully_open = False
+            if fully_open:
+                return True
+    return False
 
 
 def add_loops(grid: list[list[int]], rng: random.Random,
@@ -230,11 +254,12 @@ def add_loops(grid: list[list[int]], rng: random.Random,
                 continue
             if not is_wall_closed(grid[cell_y][cell_x], direction):
                 continue
+            if would_create_3x3_open_area(grid, cell_x, cell_y, direction):
+                continue
             candidate_to_open.append(direction)
         if candidate_to_open:
             direction = rng.choice(candidate_to_open)
             open_wall(grid, cell_x, cell_y, direction)
-    print(len(dead_ends))
 
 
 def carve_maze(grid: list[list[int]], x: int, y: int,
@@ -332,7 +357,8 @@ def shortest_path(grid: list[list[int]],
 # store
 
 
-def store_maze(grid: list[tuple[int, int]], entry, end, filename) -> None:
+def store_maze(grid: list[list[int]], entry: tuple[int, int],
+               end: tuple[int, int], filename: str) -> None:
     hex_grid: list[str] = []
     for line in grid:
         new_line: list[str] = []
@@ -344,9 +370,8 @@ def store_maze(grid: list[tuple[int, int]], entry, end, filename) -> None:
             f.write(line)
             f.write("\n")
         f.write("\n")
-        f.write(f"Entry: {entry}\n")
-        f.write(f"EXIT: {end}\n")
-        f.write("The shortest path:\n")
+        f.write(f"{entry[0]},{entry[1]}\n")
+        f.write(f"{end[0]},{end[1]}\n")
         current: tuple[int, int] = entry
         for cell in shortest_path(grid, entry, end):
             if cell == (current[0] + 1, current[1]):
@@ -354,11 +379,40 @@ def store_maze(grid: list[tuple[int, int]], entry, end, filename) -> None:
             elif cell == (current[0] - 1, current[1]):
                 f.write("W")
             elif cell == (current[0], current[1] + 1):
-                f.write("N")
-            elif cell == (current[0], current[1] - 1):
                 f.write("S")
+            elif cell == (current[0], current[1] - 1):
+                f.write("N")
             current = cell
-    print("The maze is stored in maze.txt")
+        f.write("\n")
+
+
+def entry_exit_validation(width: int, height: int, maze_entry: tuple[int, int],
+                          maze_exit: tuple[int, int],
+                          blocked: set[tuple[int, int]] | None = None) -> None:
+    """This function check that both entry and exit are valid
+
+    Args:
+        width: an int indicating the width of the grid
+        height: an int indicating the height of the grid
+        maze_entry: coordinate of the entry point
+        maze_exit: coordinates of the exit point
+        blocked: the cells of the 42 pattern
+
+    Returns:
+        None
+    """
+    if blocked is None:
+        blocked = set()
+    entry_x, entry_y = maze_entry
+    exit_x, exit_y = maze_exit
+    if not (0 <= entry_x < width and 0 <= entry_y < height):
+        raise ValueError("The entry is not in the maze!")
+    if not (0 <= exit_x < width and 0 <= exit_y < height):
+        raise ValueError("The exit is not in the maze!")
+    if (entry_x, entry_y) == (exit_x, exit_y):
+        raise ValueError("Entry and exit must not be the same!")
+    if (entry_x, entry_y) in blocked or (exit_x, exit_y) in blocked:
+        raise ValueError("Entry or exit must not be inside the 42 pattern!")
 
 
 class MazeGenerator:
@@ -381,49 +435,24 @@ class MazeGenerator:
         self.maze_entry = maze_entry
         self.maze_exit = maze_exit
         self.seed = seed
+        self.blocked: set[tuple[int, int]] = set()
         self.rng = random.Random(self.seed)
         self.perfect = perfect
         self.grid: list[list[int]] = []
-        self.blocked: list[tuple[int, int]] = []
         self.solution: list[tuple[int, int]] = []
-
-    def greet(self) -> None:
-        """sends a greeting message"""
-        print("Hello, I am A-MAZE-ING!")
 
     def generate(self) -> None:
         self.grid = build_the_grid(self.width, self.height)
-
         # Reset the random generator from the seed, so repeated calls
         # are reproducible.
         # Mark the 42 cells — call construct_pattern_42, get the blocked set.
+        self.rng = random.Random(self.seed)
         self.blocked = construct_pattern_42(self.width, self.height)
+        entry_exit_validation(self.width, self.height, self.maze_entry,
+                              self.maze_exit, self.blocked)
+        check_connectivity(self.width, self.height, self.blocked)
         carve_maze(self.grid, 0, 0, self.rng, self.blocked)
-        if self.perfect:
-            pass
-        else:
+        if not self.perfect:
             add_loops(self.grid, self.rng, self.blocked)
-        check_connectivity(self.width, self.height,
-                           self.blocked)
-        self.solution = shortest_path(
-            self.grid, self.maze_entry, self. maze_exit)
-
-        # Must happen before carving, because sealing cells after a
-        # spanning tree exists would cut the maze into islands.
-
-        # Verify connectivity of the non-blocked cells —
-        # confirm the 42 hasn't fragmented the grid into separate regions.
-
-        # Check that starting cell is not part of 42 pattern.
-
-        # Carve the spanning tree with carve_maze,
-        # passing blocked so DFS avoids the sealed cells.
-
-        # Open the entry and exit in the outer border —
-        # a separate step, since open_wall refuses border openings by design.
-
-        # If not perfect: the loop pass — fix dead-ends,
-        # guarded by the 3×3 check and the no-border rule.
-
-        # Compute the shortest path from entry to exit
-        # and store it in self.solution.
+        self.solution = shortest_path(self.grid,
+                                      self.maze_entry, self.maze_exit)
