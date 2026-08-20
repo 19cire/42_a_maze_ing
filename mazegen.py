@@ -354,37 +354,6 @@ def shortest_path(grid: list[list[int]],
     path.reverse()
     return path
 
-# store
-
-
-def store_maze(grid: list[list[int]], entry: tuple[int, int],
-               end: tuple[int, int], filename: str) -> None:
-    hex_grid: list[str] = []
-    for line in grid:
-        new_line: list[str] = []
-        for row in line:
-            new_line.append(hex(row)[2:])
-        hex_grid.append("".join(new_line))
-    with open(filename, "w") as f:
-        for line in hex_grid:
-            f.write(line)
-            f.write("\n")
-        f.write("\n")
-        f.write(f"{entry[0]},{entry[1]}\n")
-        f.write(f"{end[0]},{end[1]}\n")
-        current: tuple[int, int] = entry
-        for cell in shortest_path(grid, entry, end):
-            if cell == (current[0] + 1, current[1]):
-                f.write("E")
-            elif cell == (current[0] - 1, current[1]):
-                f.write("W")
-            elif cell == (current[0], current[1] + 1):
-                f.write("S")
-            elif cell == (current[0], current[1] - 1):
-                f.write("N")
-            current = cell
-        f.write("\n")
-
 
 def entry_exit_validation(width: int, height: int, maze_entry: tuple[int, int],
                           maze_exit: tuple[int, int],

@@ -15,7 +15,7 @@ class PerfectError(Exception):
     pass
 
 
-def check_data(data: dict[str]) -> None:
+def check_data(data: dict[str, str]) -> None:
     width: int = int(data["WIDTH"])
     height: int = int(data["HEIGHT"])
     entry: tuple[int, int] = int(data["ENTRY"][0]), int(
