@@ -1,5 +1,5 @@
-from maze.maze_functions.color import bg_square
-from ..mazegen import NORTH, EAST, SOUTH
+from maze_functions.color import bg_square
+from mazegen import NORTH, EAST, SOUTH
 
 
 def clear_screen() -> None:
@@ -10,7 +10,7 @@ def clear_screen() -> None:
 def maze_viewer(grid: list[list[int]],
                 entry: tuple[int, int],
                 exit: tuple[int, int],
-                blocked: list[tuple[int, int]],
+                blocked: set[tuple[int, int]],
                 color: int = 42,
                 path: list[tuple[int,  int]] | None = None,
                 ) -> None:
@@ -18,6 +18,7 @@ def maze_viewer(grid: list[list[int]],
     symbol: str = bg_square(color)
     count_x: int = 0
     count_y: int = 0
+    line3: list[str] = []
     for x in grid:
         line1: list[str] = [symbol]
         line2: list[str] = [symbol]

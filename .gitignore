@@ -3,3 +3,6 @@
 maze.txt
 dist
 __pycache__
+*.egg-info
+testenv
+build
