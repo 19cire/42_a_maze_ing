@@ -1,13 +1,13 @@
 import random
 from mazegen.mazegen import (build_the_grid, is_wall_closed, open_wall,
-                          get_unvisited_neighbours, carve_maze,
-                          construct_pattern_42,
-                          check_connectivity,
-                          count_open_walls,
-                          add_loops,
-                          DIRECTION_STEP,
-                          ALL_WALLS_CLOSED
-                          )
+                             get_unvisited_neighbours, carve_maze,
+                             construct_pattern_42,
+                             check_connectivity,
+                             count_open_walls,
+                             add_loops,
+                             DIRECTION_STEP,
+                             ALL_WALLS_CLOSED
+                             )
 from mazegen.mazegen import NORTH, EAST, WEST, SOUTH
 grid = build_the_grid(20, 15)
 print("====Grid buiding test====")
@@ -117,7 +117,7 @@ after = 0
 for row in grid:
     for cell in row:
         if count_open_walls(cell) == 1:
-            after  += 1
+            after += 1
 print("dead-ends after:", after, "- was 26")
 open_count = 0
 for row in grid:

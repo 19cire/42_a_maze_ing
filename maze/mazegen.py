@@ -1,12 +1,10 @@
 import random
 PATTERN_42 = [
-    "#..#..####",
-    "#..#.....#",
-    "#..#.....#",
-    "####..####",
-    "...#..#...",
-    "...#..#...",
-    "...#..####",
+    "#.#.####",
+    "#.#....#",
+    "###.####",
+    "..#.#...",
+    "..#.####",
 ]
 ALL_WALLS_CLOSED = 15
 NORTH = 1
@@ -186,7 +184,7 @@ def count_open_walls(cell: int) -> int:
 
 
 def would_create_3x3_open_area(grid: list[list[int]], x: int,
-                               y:int, direction: int) -> bool:
+                               y: int, direction: int) -> bool:
     """This function tell us ifma 3x3 open area is opened
 
     Args:
@@ -271,6 +269,97 @@ def carve_maze(grid: list[list[int]], x: int, y: int,
             visited.add((neighbour_x, neighbour_y))
             stack.append((neighbour_x, neighbour_y))
 
+# PATH funcions
+
+
+def check_directions(point: int) -> list[str]:
+    dir: list[str] = []
+    if not point & NORTH:
+        dir.append("N")
+    if not point & EAST:
+        dir.append("E")
+    if not point & SOUTH:
+        dir.append("S")
+    if not point & WEST:
+        dir.append("W")
+    return dir
+
+
+def go(direction: str,
+       x: int,
+       y: int,
+       queue: list[tuple[int, int]],
+       came_from: dict[tuple[int, int], tuple[int, int] | None]
+       ) -> None:
+    if direction == "N" and (x, y - 1) not in came_from:
+        queue.append((x, y - 1))
+        came_from[((x, y - 1))] = (x, y)
+
+    if direction == "E" and (x + 1, y) not in came_from:
+        queue.append((x + 1, y))
+        came_from[((x + 1, y))] = (x, y)
+
+    if direction == "S" and (x, y + 1) not in came_from:
+        queue.append((x, y + 1))
+        came_from[((x, y + 1))] = (x, y)
+    if direction == "W" and (x - 1, y) not in came_from:
+        queue.append((x - 1, y))
+        came_from[((x - 1, y))] = (x, y)
+
+
+def shortest_path(grid: list[list[int]],
+                  start: tuple[int, int],
+                  end: tuple[int, int]
+                  ) -> list[tuple[int, int]]:
+    queue: list[tuple[int, int]] = [start]
+    came_from: dict[tuple[int, int], tuple[int, int] | None] = {start:  None}
+
+    while queue:
+        x, y = queue.pop(0)
+        if (x, y) == end:
+            break
+        directions: list[str] = check_directions(grid[y][x])
+        for direction in directions:
+            go(direction, x, y, queue, came_from)
+    path: list[tuple[int, int]] = []
+    current: tuple[int, int] | None = end
+    while current is not None:
+        path.append(current)
+        current = came_from[current]
+    path.reverse()
+    return path
+
+# store
+
+
+def store_maze(grid: list[tuple[int, int]], entry, end, filename) -> None:
+    hex_grid: list[str] = []
+    for line in grid:
+        new_line: list[str] = []
+        for row in line:
+            new_line.append(hex(row)[2:])
+        hex_grid.append("".join(new_line))
+    with open(filename, "w") as f:
+        for line in hex_grid:
+            f.write(line)
+            f.write("\n")
+        f.write("\n")
+        f.write(f"Entry: {entry}\n")
+        f.write(f"EXIT: {end}\n")
+        f.write("The shortest path:\n")
+        current: tuple[int, int] = entry
+        for cell in shortest_path(grid, entry, end):
+            if cell == (current[0] + 1, current[1]):
+                f.write("E")
+            elif cell == (current[0] - 1, current[1]):
+                f.write("W")
+            elif cell == (current[0], current[1] + 1):
+                f.write("N")
+            elif cell == (current[0], current[1] - 1):
+                f.write("S")
+            current = cell
+    print("The maze is stored in maze.txt")
+
 
 class MazeGenerator:
     """The class of the generator
@@ -285,7 +374,8 @@ class MazeGenerator:
     """
 
     def __init__(self, width: int, height: int, maze_entry: tuple[int, int],
-                 maze_exit: tuple[int, int], seed: int, perfect: bool) -> None:
+                 maze_exit: tuple[int, int],
+                 seed: int, perfect: bool) -> None:
         self.width = width
         self.height = height
         self.maze_entry = maze_entry
@@ -294,12 +384,30 @@ class MazeGenerator:
         self.rng = random.Random(self.seed)
         self.perfect = perfect
         self.grid: list[list[int]] = []
+        self.blocked: list[tuple[int, int]] = []
         self.solution: list[tuple[int, int]] = []
 
+    def greet(self) -> None:
+        """sends a greeting message"""
+        print("Hello, I am A-MAZE-ING!")
+
     def generate(self) -> None:
+        self.grid = build_the_grid(self.width, self.height)
+
         # Reset the random generator from the seed, so repeated calls
         # are reproducible.
         # Mark the 42 cells — call construct_pattern_42, get the blocked set.
+        self.blocked = construct_pattern_42(self.width, self.height)
+        carve_maze(self.grid, 0, 0, self.rng, self.blocked)
+        if self.perfect:
+            pass
+        else:
+            add_loops(self.grid, self.rng, self.blocked)
+        check_connectivity(self.width, self.height,
+                           self.blocked)
+        self.solution = shortest_path(
+            self.grid, self.maze_entry, self. maze_exit)
+
         # Must happen before carving, because sealing cells after a
         # spanning tree exists would cut the maze into islands.
 
@@ -319,4 +427,3 @@ class MazeGenerator:
 
         # Compute the shortest path from entry to exit
         # and store it in self.solution.
-        pass
