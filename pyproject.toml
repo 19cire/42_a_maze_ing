@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mazegen"
+name = "maze"
 version = "1.0"
 description = "A reusable maze generator"
 readme = "README.md"
-requires-python = "3.14"
-strict="true"
+requires-python = ">=3.10"
+
 
 [tool.setuptools]
 py-modules = ["mazegen"]

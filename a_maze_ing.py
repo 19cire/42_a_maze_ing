@@ -1,5 +1,5 @@
 import sys
-from file_reader import read_file, parse_coordinate
+from maze_functions.file_reader import read_file, parse_coordinate
 from mazegen import MazeGenerator
 from maze_functions.show_maze import maze_viewer, clear_screen
 from maze_functions.menu import show_menu
@@ -36,6 +36,10 @@ def main(config_data: dict[str, str], new: bool = False) -> None:
 if __name__ == "__main__":
     if "--perfect" in sys.argv:
         print("PERFECT MODE IS ACTIVATED!!!")
+
+    if len(sys.argv) < 2:
+        print("Usage: python a_maze_ing.py <config_file>")
+        sys.exit(1)  # Beende das Programm mit Fehlercode 1
 
     config_file: str = sys.argv[1]
     try:

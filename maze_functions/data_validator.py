@@ -1,4 +1,4 @@
-from file_reader import parse_coordinate
+from .file_reader import parse_coordinate
 
 
 class SizeError(Exception):
