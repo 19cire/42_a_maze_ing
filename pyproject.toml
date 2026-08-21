@@ -7,7 +7,8 @@ name = "mazegen"
 version = "1.0"
 description = "A reusable maze generator"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = "3.14"
+strict="true"
 
 [tool.setuptools]
 py-modules = ["mazegen"]

@@ -1,4 +1,4 @@
-from maze_functions.color import bg_square
+from .color import bg_square
 from mazegen import NORTH, EAST, SOUTH
 
 

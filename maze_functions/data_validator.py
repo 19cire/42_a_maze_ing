@@ -1,3 +1,5 @@
+from file_reader import parse_coordinate
+
 
 class SizeError(Exception):
     pass
@@ -16,12 +18,11 @@ class PerfectError(Exception):
 
 
 def check_data(data: dict[str, str]) -> None:
+
     width: int = int(data["WIDTH"])
     height: int = int(data["HEIGHT"])
-    entry: tuple[int, int] = int(data["ENTRY"][0]), int(
-        data["ENTRY"][1])
-    maze_exit: tuple[int, int] = int(data["EXIT"][0]), int(
-        data["EXIT"][1])
+    entry: tuple[int, int] = parse_coordinate(data["ENTRY"])
+    maze_exit: tuple[int, int] = parse_coordinate(data["EXIT"])
     if width < 12 or height < 9:
         raise SizeError("The width and height must be greater than 10!")
     if min(*entry, *maze_exit) < 0:

@@ -1,9 +1,5 @@
-# !/usr/bin/python3
-# from typing import Any
 import sys
-import time
-# from mazegen.maze_functions.generator import generate_maze
-from file_reader import read_file
+from file_reader import read_file, parse_coordinate
 from mazegen import MazeGenerator
 from maze_functions.show_maze import maze_viewer, clear_screen
 from maze_functions.menu import show_menu
@@ -15,10 +11,8 @@ from maze_functions.data_validator import (check_data,
 
 
 def main(config_data: dict[str, str], new: bool = False) -> None:
-    entry: tuple[int, int] = int(config_data["ENTRY"][0]), int(
-        config_data["ENTRY"][1])
-    end: tuple[int, int] = int(config_data["EXIT"][0]), int(
-        config_data["EXIT"][1])
+    entry: tuple[int, int] = parse_coordinate(config_data["ENTRY"])
+    end: tuple[int, int] = parse_coordinate(config_data["EXIT"])
     maze = MazeGenerator(
         int(config_data["WIDTH"]),
         int(config_data["HEIGHT"]),
@@ -28,7 +22,6 @@ def main(config_data: dict[str, str], new: bool = False) -> None:
         config_data["PERFECT"] == "True"
     )
     maze.generate()
-
     maze_viewer(maze.grid, entry, end, maze.blocked)
     try:
         show_menu(maze, config_data)
@@ -43,7 +36,6 @@ def main(config_data: dict[str, str], new: bool = False) -> None:
 if __name__ == "__main__":
     if "--perfect" in sys.argv:
         print("PERFECT MODE IS ACTIVATED!!!")
-        time.sleep(2)
 
     config_file: str = sys.argv[1]
     try:
