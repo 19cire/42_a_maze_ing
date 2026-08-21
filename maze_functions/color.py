@@ -1,4 +1,4 @@
-import numpy as np
+import random
 
 
 def bg_square(color_index: int) -> str:
@@ -6,5 +6,5 @@ def bg_square(color_index: int) -> str:
 
 
 def change_color() -> int:
-    color: int = np.random.randint(0, 256)
+    color: int = random.randint(0, 255)
     return (color)

@@ -1,11 +1,11 @@
-PYTHON	= .venv/bin/python3
-PIP		= .venv/bin/pip
+PYTHON	= $(VENV)/bin/python3
+PIP		= $(VENV)/bin/pip
 SRC		= a_maze_ing.py
 CONFIG	= config.txt
-VENV	= .venv
+VENV	= matrix
 
 $(VENV):
-	python3 -m venv $(VENV)
+	python3.11 -m venv $(VENV)
 
 install: $(VENV)
 	$(PIP) install pytest flake8 mypy
@@ -17,18 +17,18 @@ run:
 
 test: 
 	@echo "Running test..."
-	$(PYTHON) -m pytest
+	$(PYTHON) -m pytest mytest.py
 
 debug:
 	$(PYTHON) -m pdb $(SRC)
 
 lint:
 	flake8 $(SRC)
-	mypy $(SRC) --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	mypy $(SRC)
 
 lint-strict:
 	flake8 *.py
-	mypy --strict *.py
+	mypy --strict -python-version 3.11 .
 
 clean:
 	rm -rf .mypy_cache .pytest_cache

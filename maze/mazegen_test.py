@@ -1,18 +1,18 @@
 import random
 from mazegen import (build_the_grid, is_wall_closed, open_wall,
-                          get_unvisited_neighbours, carve_maze,
-                          construct_pattern_42,
-                          check_connectivity,
-                          count_open_walls,
-                          add_loops,
-                          would_create_3x3_open_area,
-                          shortest_path,
-                          store_maze,
-                          entry_exit_validation,
-                          MazeGenerator,
-                          DIRECTION_STEP,
-                          ALL_WALLS_CLOSED
-                          )
+                     get_unvisited_neighbours, carve_maze,
+                     construct_pattern_42,
+                     check_connectivity,
+                     count_open_walls,
+                     add_loops,
+                     would_create_3x3_open_area,
+                     shortest_path,
+                     store_maze,
+                     entry_exit_validation,
+                     MazeGenerator,
+                     DIRECTION_STEP,
+                     ALL_WALLS_CLOSED
+                     )
 from mazegen import NORTH, EAST, WEST, SOUTH
 grid = build_the_grid(20, 15)
 print("====Grid buiding test====")
@@ -122,7 +122,7 @@ after = 0
 for row in grid:
     for cell in row:
         if count_open_walls(cell) == 1:
-            after  += 1
+            after += 1
 print("dead-ends after:", after, "- was 26")
 open_count = 0
 for row in grid:
@@ -150,7 +150,7 @@ open_wall(grid, 3, 2, SOUTH)
 answer = would_create_3x3_open_area(grid, 2, 2, SOUTH)
 print(answer)
 print("\n====Mazegenerator test===")
-generator = MazeGenerator(20, 15, (1,1), (18, 13), 42, False)
+generator = MazeGenerator(20, 15, (1, 1), (18, 13), 42, False)
 generator.generate()
 for row in generator.grid:
     print("".join(f"{cell:x}" for cell in row))

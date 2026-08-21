@@ -1,4 +1,4 @@
-from maze_functions.color import bg_square
+from .color import bg_square
 from mazegen import NORTH, EAST, SOUTH
 
 
@@ -22,7 +22,8 @@ def maze_viewer(grid: list[list[int]],
     for x in grid:
         line1: list[str] = [symbol]
         line2: list[str] = [symbol]
-        line3: list[str] = [symbol]
+        line3 = [symbol]
+
         count_y = 0
         for y in x:
             line1.append(symbol if y & NORTH else "  ")

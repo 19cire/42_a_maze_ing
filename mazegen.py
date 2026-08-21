@@ -1,7 +1,7 @@
 import random
 PATTERN_42 = [
-    "#.#.####",
-    "#.#....#",
+    "#...####",
+    "#......#",
     "###.####",
     "..#.#...",
     "..#.####",
@@ -365,15 +365,21 @@ def store_maze(grid: list[list[int]], entry: tuple[int, int],
         for row in line:
             new_line.append(hex(row)[2:])
         hex_grid.append("".join(new_line))
+
+    path = shortest_path(grid, entry, end)
+    if path is None:
+        raise ValueError("No path found between entry and exit")
+
     with open(filename, "w") as f:
-        for line in hex_grid:
-            f.write(line)
+        for hex_value in hex_grid:
+            f.write(hex_value)
             f.write("\n")
         f.write("\n")
         f.write(f"{entry[0]},{entry[1]}\n")
         f.write(f"{end[0]},{end[1]}\n")
+
         current: tuple[int, int] = entry
-        for cell in shortest_path(grid, entry, end):
+        for cell in path:
             if cell == (current[0] + 1, current[1]):
                 f.write("E")
             elif cell == (current[0] - 1, current[1]):
